@@ -230,7 +230,7 @@ const WidgetsRender = ({
   }, [isFourRow, layoutRef?.current?.clientWidth])
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative' }} width={'100%'} height={'100%'}>
       {/*request와 관련된 toast*/}
       <CuToast
         severity={toastMessage?.severity}
@@ -293,7 +293,12 @@ const WidgetsRender = ({
         {/*toolbox 영역*/}
         {children}
         {/* react-grid-layout 영역 */}
-        <Box bgcolor="background.secondary" ref={layoutRef} width={'100%'}>
+        <Box
+          bgcolor="background.secondary"
+          ref={layoutRef}
+          maxWidth={'100%'}
+          sx={{ position: 'relative' }}
+        >
           <GridLayout
             width={isFourRow ? widgetWidth * 4 : widgetWidth * 2}
             className="layout"

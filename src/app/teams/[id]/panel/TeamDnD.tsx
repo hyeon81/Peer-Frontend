@@ -1,8 +1,8 @@
-import { Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import useAxiosWithAuth from '@/api/config'
 import 'react-grid-layout/css/styles.css'
 import { ITeamDnDLayout, SizeType, WidgetType } from '@/types/ITeamDnDLayout'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGridLayout from 'react-grid-layout'
 import useSWRMutation from 'swr/mutation'
 import WidgetsRender from './WidgetsRender'
@@ -26,6 +26,7 @@ const TeamDnD = ({ id }: { id: string }) => {
   })
   const [isDropping, setIsDropping] = useState(false)
   const [size, setSize] = useState<SizeType>('S')
+  const [width, setWidth] = useState(0)
   const axiosInstance = useAxiosWithAuth()
   const { trigger, data, error, isMutating } = useSWRMutation<ITeamDnDLayout>(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/dnd-main/read`,
@@ -36,6 +37,17 @@ const TeamDnD = ({ id }: { id: string }) => {
   )
   useEffect(() => {
     trigger()
+  }, [])
+
+  useEffect(() => {
+    const rootElement = document.documentElement.offsetWidth
+    const rootWidth = rootElement?.offsetWidth
+    const rootFontSize = parseFloat(
+      getComputedStyle(document.documentElement).fontSize,
+    )
+    const sideBarWidth = rootFontSize * 19.25
+    const padding = 160
+    setWidth(rootWidth - sideBarWidth - padding)
   }, [])
 
   // api 에러 생길 시 주석 처리 필요
@@ -50,7 +62,7 @@ const TeamDnD = ({ id }: { id: string }) => {
       }}
       spacing={4}
     >
-      {/*dnd 렌더링*/}
+      dnd 렌더링
       <WidgetsRender
         id={id}
         // key={data}
@@ -62,7 +74,7 @@ const TeamDnD = ({ id }: { id: string }) => {
         edit={edit}
         setEdit={setEdit}
       >
-        {/*툴 박스 리스트*/}
+        툴 박스 리스트
         {edit && (
           <WidgetList
             setIsDropping={setIsDropping}
